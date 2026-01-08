@@ -157,3 +157,26 @@ Now start the container and build the artifacts from source (~5min):
 sudo docker run -it --rm --privileged --security-opt apparmor=unconfined cbackyx/ringsg-ae:build-from-source-v2 /bin/bash
 python build.py --setup
 python build.py
+
+# TODO: replace with your image name if you provide one
+sudo docker pull <your-dockerhub-namespace>/triguard:build-from-source
+
+sudo docker run -it --rm --privileged --security-opt apparmor=unconfined \
+  <your-dockerhub-namespace>/triguard:build-from-source /bin/bash
+
+# Option A: build script
+python build.py --setup
+python build.py
+
+# Option B: plain cmake
+# mkdir -p build && cd build
+# cmake .. && make -j
+
+
+# TODO: replace with your actual test entrypoint
+cd eval
+python tmp_run_cluster.py --sanity --smallest
+
+
+# TODO: update this to match your runner
+python tmp_run_cluster.py -h
