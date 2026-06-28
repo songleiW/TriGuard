@@ -1,93 +1,96 @@
 <div align="center">
-
 <!-- (Optional) logo -->
 <!-- <img src="./fig/logo.png" width=160> -->
-
-<h1>TriGuard<br/>Maliciously Secure Triangle Counting for Streaming Graphs</h1>
-
+<h1>TriGuard<br/>Enabling Oblivious Triangle Counting for Streaming Graphs</h1>
 <!-- Badges (edit as needed) -->
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](#license)
-<!-- [![Paper](https://img.shields.io/badge/Paper-CCS%202026-blue.svg)](#citation) -->
-
+<!-- [![Paper](https://img.shields.io/badge/Paper-VLDB%202026-blue.svg)](#citation) -->
 </div>
 
 This repository contains a prototype implementation of the protocols proposed in:
 
-> **TriGuard: Enabling Maliciously Secure Triangle Counting for Streaming Graphs** 
+TriGuard: Enabling Oblivious Triangle Counting for Streaming Graphs
 
-TriGuard is the first framework that supports **private, verifiable, and lossless** triangle counting on **streaming directed graphs**, securely handling **both cycle triangles and flow triangles** under a **malicious adversary** model. It integrates replicated secret sharing with information-theoretic MACs to ensure computation integrity in the secret-sharing domain.  
+TriGuard is a framework that supports private and lossless triangle counting on streaming directed graphs, securely handling both cycle triangles and flow triangles.
 
----
+⸻
 
-## Table of Contents
-- [0 Necessary Backgrounds](#0-necessary-backgrounds)
-- [1 Introduction](#1-introduction)
-- [2 Quick Set Up](#2-quick-set-up)
-- [3 Full Evaluation](#3-full-evaluation)
-- [4 Notes / Caveat](#4-notes--caveat)
-- [Citation](#citation)
-- [License](#license)
+Table of Contents
 
----
+* 0 Necessary Background
+* 1 Introduction
+* 2 Codebase Organization
+* 3 Quick Setup
+* 4 Full Evaluation
+* 5 Notes / Caveats
+* Citation
+* License
 
-## 0 Necessary Backgrounds
+⸻
 
-### 0.1 Triangle Counting on Streaming Directed Graphs
-TriGuard considers a **directed and unweighted streaming graph** as a growing edge sequence, where each edge arrives with a timestamp.  
-Given a time window size **W**, TriGuard maintains the number of **cycle triangles** and **flow triangles** in the current **snapshot graph** (i.e., edges with timestamps in the interval **(t−W, t]**) at each time point `t`.
+0 Necessary Background
 
-### 0.2 Threat Model & Goal
-TriGuard targets an **outsourced** setting with **three non-colluding servers** and an **active (malicious) adversary**, where at most one server may deviate arbitrarily. The goal is to:
-- keep the **graph structure** private from the servers,
-- return **correct triangle counts** (cycle + flow),
-- and **detect tampering** via verifiable integrity mechanisms.
+0.1 Triangle Counting on Streaming Directed Graphs
 
----
+TriGuard considers a directed and unweighted streaming graph as a growing edge sequence, where each edge arrives with a timestamp.
 
-## 1 Introduction
+Given a time window size W, TriGuard maintains the number of cycle triangles and flow triangles in the current snapshot graph, i.e., the graph formed by edges with timestamps in the interval (t−W, t], at each time point t.
 
-### 1.1 Core Idea (High-Level)
+0.2 Threat Model and Goal
+
+TriGuard targets an outsourced setting with three non-colluding servers. The goal is to:
+
+* keep the graph structure private from the servers, and
+* return triangle counts for both cycle triangles and flow triangles.
+
+⸻
+
+1 Introduction
+
+1.1 Core Idea
+
 TriGuard reduces secure triangle counting to:
-1) **secure neighbor aggregation** over streaming snapshots, and  
-2) **secret-shared dot products** between (one-hot encoded) neighbor vectors.  
 
-To achieve efficiency, TriGuard uses a **single-round oblivious message passing** protocol with **bidirectional edge propagation** for neighbor aggregation, and then applies lightweight secure arithmetic to compute triangle counts. To achieve malicious security, TriGuard integrates **information-theoretic MACs** with replicated secret sharing and addresses challenges specific to **unbounded streams**, including MAC creation for streaming values and correctness of MAC verification under secure multiplications.
+1. secure neighbor aggregation over streaming snapshots, and
+2. secret-shared dot products between one-hot encoded neighbor vectors.
 
-## 1 Introduction
+To achieve efficiency, TriGuard uses a single-round oblivious message passing protocol with bidirectional edge propagation for neighbor aggregation, and then applies lightweight secure arithmetic to compute triangle counts.
 
-The organization of this codebase and basic information on each folder/file are as below:
+⸻
 
-```bash
+2 Codebase Organization
+
+The organization of this codebase and basic information on each folder/file are shown below:
+
 └── 📁aby3
     └── 📁aby3
     └── 📁aby3_tests
     └── 📁aby3-DB
         └── CMakeLists.txt
-        └── OblvSwitchNet.cpp # The Oblivious Extended Permuation (OEP) Implementation
+        └── OblvSwitchNet.cpp # Oblivious Extended Permutation (OEP) implementation
         └── OblvSwitchNet.h
-        └── OblvPermutation.cpp # The Oblivious Permuation (OP) Implementation
+        └── OblvPermutation.cpp # Oblivious Permutation (OP) implementation
         └── OblvPermutation.h
     └── 📁aby3-DB_tests
         └── CMakeLists.txt
-        └── PermutaitonTests.cpp  # Unit tests for OEP and OP
+        └── PermutaitonTests.cpp # Unit tests for OEP and OP
         └── PermutaitonTests.h
     └── 📁aby3-Graph
         └── CMakeLists.txt
-        └── cognn_cc.cpp # 3PC-based CoGNN Implementation
-        └── cognn_cc.h 
-        └── graphsc.cpp # 3PC-based GraphSC (Graphiti) Implementation
+        └── cognn_cc.cpp # 3PC-based CoGNN implementation
+        └── cognn_cc.h
+        └── graphsc.cpp # 3PC-based GraphSC / Graphiti implementation
         └── graphsc.h
-        └── OEP.cpp # OEP Wrapper
+        └── OEP.cpp # OEP wrapper
         └── OEP.h
-        └── OGA.cpp # OGA Implementation
+        └── OGA.cpp # OGA implementation
         └── OGA.h
-        └── operators.cpp # Some basic circuits
+        └── operators.cpp # Basic circuits
         └── operators.h
-        └── ours.cpp # RingSG Implementation
+        └── ours.cpp # TriGuard implementation
         └── ours.h
-        └── shuffle.cpp # 3PC-based secret-shared shuffle (for GraphSC)
+        └── shuffle.cpp # 3PC-based secret-shared shuffle
         └── shuffle.h
-        └── sort.cpp # 3PC-based secure sort (for GraphSC)
+        └── sort.cpp # 3PC-based secure sort
         └── sort.h
         └── utils.cpp
         └── utils.h
@@ -97,86 +100,112 @@ The organization of this codebase and basic information on each folder/file are 
         └── graph_tests.h
         └── tests.cpp
         └── tests.h
-    └── 📁eval # Folder of evaluation scripts
-        └── 📁scripts # Scripts for setting network namespaces (for simulating the running environment of each party)
+    └── 📁eval # Evaluation scripts
+        └── 📁scripts # Scripts for setting network namespaces
         └── 📁log # Logs of each experiment
         └── 📁plot
             └── 📁fig
-            └── plot_3pc_cmp.py  
-            └── plot_ablation.py  
-            └── plot_e2e.py  
-            └── plot_num_parties.py  
-            └── plot_scales.py  
-            └── plot_vertex_degrees.py  
+            └── plot_3pc_cmp.py
+            └── plot_ablation.py
+            └── plot_e2e.py
+            └── plot_num_parties.py
+            └── plot_scales.py
+            └── plot_vertex_degrees.py
         └── CMakeLists.txt
         └── eval_func.cpp
         └── eval_func.h
-        └── main.cpp # Entrance of evaluation executable
-        └── tmp_run_cluster.py # Script for running all (or each part of) evaluations
+        └── main.cpp # Entry point of the evaluation executable
+        └── tmp_run_cluster.py # Script for running evaluations
     └── 📁frontend
     └── 📁thirdparty # Third-party dependencies
     └── .gitignore
-    └── build.py # The building script
+    └── build.py # Build script
     └── CMakeLists.txt
     └── LICENSE
     └── README.md
-```
 
-## 2 Quick Set Up
+⸻
 
-We provide a build-from-source Docker image for your convenience.
-- Nevertheless, you can also set up TriGuard according to the original [aby3](https://github.com/ladnir/aby3) library's setup instructions, which might be non-trivial do to the dependencies setup process.
+3 Quick Setup
 
-### 2.1 Environmental Requirements
+We provide a build-from-source Docker image for convenience.
 
-We summarize the required hardware resources and software conditions for running the Docker image we provide.
+You may also set up TriGuard according to the original aby3 library’s setup instructions, although this can be non-trivial due to the dependency setup process.
 
-**Hardware Resources**
-- An x86_64 Linux server (at least 64GB RAM, 256GB spare disk)
-    - We tested on Intel(R) Xeon(R) Gold 6348 CPU @ 2.60GHz with 512GB RAM
+3.1 Environmental Requirements
 
-**Software Resources**
-- Operating System
-    - We tested on Ubuntu 20.04 (with APT package manager)
-- Docker
-    - We tested on Docker version 27.4.0
+We summarize the required hardware resources and software conditions for running the Docker image.
 
-### 2.2 Step-by-Step Instructions
+Hardware Resources
 
-> Please don't hesitate to reach out for us if you met any problems during this process. Please kindly attach the error information. Thanks!
+* An x86_64 Linux server with at least 64GB RAM and 256GB spare disk space
+    * We tested on Intel(R) Xeon(R) Gold 6348 CPU @ 2.60GHz with 512GB RAM
 
-Pull the image (~10min, depending on your network condition):
+Software Resources
 
-```bash
-sudo docker pull cbackyx/ae:build-from-source-v2
-```
+* Operating System
+    * We tested on Ubuntu 20.04 with the APT package manager
+* Docker
+    * We tested on Docker version 27.4.0
 
-Now start the container and build the artifacts from source (~5min):
+3.2 Step-by-Step Instructions
 
-```bash
-sudo docker run -it --rm --privileged --security-opt apparmor=unconfined cbackyx/ringsg-ae:build-from-source-v2 /bin/bash
-python build.py --setup
-python build.py
+Please do not hesitate to reach out to us if you encounter any problems during this process. Kindly attach the error information when reporting issues.
 
-# TODO: replace with your image name if you provide one
+Pull the Docker image. This may take around 10 minutes depending on your network condition.
+
 sudo docker pull <your-dockerhub-namespace>/triguard:build-from-source
+
+Start the container and build the artifacts from source. This may take around 5 minutes.
 
 sudo docker run -it --rm --privileged --security-opt apparmor=unconfined \
   <your-dockerhub-namespace>/triguard:build-from-source /bin/bash
-
-# Option A: build script
 python build.py --setup
 python build.py
 
-# Option B: plain cmake
-# mkdir -p build && cd build
-# cmake .. && make -j
+Alternatively, you may build the project with CMake.
 
+mkdir -p build && cd build
+cmake ..
+make -j
 
-# TODO: replace with your actual test entrypoint
+Run a small sanity test.
+
 cd eval
 python tmp_run_cluster.py --sanity --smallest
 
+Check the available evaluation options.
 
-# TODO: update this to match your runner
 python tmp_run_cluster.py -h
+
+⸻
+
+4 Full Evaluation
+
+The evaluation scripts are located under the eval directory.
+
+cd eval
+python tmp_run_cluster.py -h
+
+Please refer to the command-line help message for available options. The generated logs are stored under:
+
+eval/log
+
+The plotting scripts are located under:
+
+eval/plot
+
+⸻
+
+5 Notes / Caveats
+
+* This repository contains a prototype implementation intended for research evaluation.
+* The current implementation focuses on reproducing the main experimental results of TriGuard.
+* The Docker image is recommended for a smoother setup experience.
+* Some evaluation scripts may require sufficient memory and disk space, depending on the selected dataset and parameter setting.
+
+
+
+License
+
+This project is licensed under the MIT License. See LICENSE for details.
