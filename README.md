@@ -13,7 +13,7 @@
 
 This repository contains a prototype implementation of the protocols proposed in:
 
-> **TriGuard: Enabling Maliciously Secure Triangle Counting for Streaming Graphs** (CCS 2026 submission)
+> **TriGuard: Enabling Maliciously Secure Triangle Counting for Streaming Graphs** 
 
 TriGuard is the first framework that supports **private, verifiable, and lossless** triangle counting on **streaming directed graphs**, securely handling **both cycle triangles and flow triangles** under a **malicious adversary** model. It integrates replicated secret sharing with information-theoretic MACs to ensure computation integrity in the secret-sharing domain.  
 
