@@ -130,18 +130,17 @@ We provide a build-from-source Docker image for your convenience.
 We summarize the required hardware resources and software conditions for running the Docker image we provide.
 
 **Hardware Resources**
-- An x86_64 Linux server (at least 64GB RAM, 256GB spare disk)
-    - We tested on Intel(R) Xeon(R) Gold 6348 CPU @ 2.60GHz with 512GB RAM
+- Intel Xeon Gold 6238R CPU, 128~GB of RAM, and 1~TB of external SSD storage, running Ubuntu~24.04~LTS
 
 **Software Resources**
 - Operating System
-    - We tested on Ubuntu 20.04 (with APT package manager)
+    - We tested on Ubuntu~24.04~LTS
 - Docker
     - We tested on Docker version 27.4.0
 
 ### 2.2 Step-by-Step Instructions
 
-> Please don't hesitate to reach out for us if you met any problems during this process. Please kindly attach the error information. Thanks!
+> Please don't hesitate to reach out for us if you met any problems during this process. Please kindly attach the error information. 
 
 Pull the image (~10min, depending on your network condition):
 
